@@ -1,8 +1,11 @@
 package sanketguru.com.sample;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,6 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,13 +33,15 @@ public class MainActivity extends AppCompatActivity
     //@BindView(R.id.toolbar)
     ActionBar toolbar;
     @BindView(R.id.drawer_layout)
-    DrawerLayout drawer;
+    DrawerLayout drawer;  @BindView(R.id.text)
+    TextView text;
     @BindView(R.id.mainView)
     android.support.v7.widget.CardView mainView;
     @BindView(R.id.nav_view)
     android.support.design.widget.NavigationView navView;
     private Unbinder unBinder;
-
+    private MainViewModel mModel;
+int daddt=2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +51,14 @@ public class MainActivity extends AppCompatActivity
         // setSupportActionBar(toolbar);
         toolbar = getSupportActionBar();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        mModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mModel.getUserDetail().observe(this, nameObserver);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                mModel.getUserDetail().setValue(new UserDetails(++daddt+"assj","ff",new Date()));
             }
         });
 
@@ -61,10 +72,19 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    final Observer<UserDetails> nameObserver = new Observer<UserDetails>() {
+        @Override
+        public void onChanged(@Nullable final UserDetails newName) {
+            // Update the UI, in this case, a TextView.
+            if(newName!=null)
+            text.setText(newName.getFName());
+        }
+
+    };
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -133,7 +153,6 @@ public class MainActivity extends AppCompatActivity
         mainView.setTranslationX(moveFactor);
         mainView.setScaleX(1 - slideOffset / 4);
         mainView.setScaleY(1 - slideOffset / 5);
-        //   mainView.getElevation() = slideOffset * 10.toPx(this@HomeActivity);
         mainView.setCardElevation(slideOffset * (15 * toPx(MainActivity.this)));
     }
 

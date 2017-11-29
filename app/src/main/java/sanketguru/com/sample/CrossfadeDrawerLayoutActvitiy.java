@@ -1,8 +1,11 @@
+/*
 package sanketguru.com.sample;
 
+*/
 /**
  * Created by sanket on 11/28/2017.
- */
+ *//*
+
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -145,11 +148,13 @@ public class CrossfadeDrawerLayoutActvitiy extends AppCompatActivity implements 
         });
 
 
-        /**
+        */
+/**
          * NOTE THIS IS A HIGHLY CUSTOM ANIMATION. USE CAREFULLY.
          * this animate the height of the profile to the height of the AccountHeader and
          * animates the height of the drawerItems to the normal drawerItems so the difference between Mini and normal Drawer is eliminated
-         **/
+         **//*
+
 
         final double headerHeight = DrawerUIUtils.getOptimalDrawerWidth(this) * 9d / 16d;
         final double originalProfileHeight = UIUtils.convertDpToPixel(72, this);
@@ -231,4 +236,4 @@ public class CrossfadeDrawerLayoutActvitiy extends AppCompatActivity implements 
         return context.getResources().getDisplayMetrics().density;
         // return (this * density).toInt()
     }
-}
+}*/

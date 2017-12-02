@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android-mvvm-sample.iml" filepath="$PROJECT_DIR$/android-mvvm-sample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\SanketData\GitRepo\android-mvvm-sample\android-mvvm-sample.iml" filepath="D:\SanketData\GitRepo\android-mvvm-sample\android-mvvm-sample.iml" />
+      <module fileurl="file://D:\SanketData\GitRepo\android-mvvm-sample\app\app.iml" filepath="D:\SanketData\GitRepo\android-mvvm-sample\app\app.iml" />
     </modules>
   </component>
 </project>

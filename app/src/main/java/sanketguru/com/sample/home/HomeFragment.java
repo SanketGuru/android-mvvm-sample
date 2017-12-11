@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ import sanketguru.com.sample.R;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,7 +39,8 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private OnFragmentInteractionListener mListener;
     @BindView(R.id.swipRefreshLayout)
-    SwipeRefreshLayout swipRefreshLayout;
+    SwipeRefreshLayout swipRefreshLayout; @BindView(R.id.fab)
+    FloatingActionButton fab;
     Unbinder unBinder;
 
     public HomeFragment() {
@@ -92,6 +94,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         unBinder = ButterKnife.bind(this, v);
+        swipRefreshLayout.setOnRefreshListener(() -> homeViewModel.getSectionList());
+        fab.setOnClickListener(view -> homeViewModel.getSectionList());
         return v;
     }
 
@@ -119,4 +123,8 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void onRefresh() {
+
+    }
 }

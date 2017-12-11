@@ -1,4 +1,8 @@
-package sanketguru.com.sample.apiservices;
+package sanketguru.com.sample.test;
+
+/**
+ * Created by sanket on 12/3/2017.
+ */
 
 import java.io.IOException;
 
@@ -12,10 +16,10 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sanketguru.com.sample.BuildConfig;
 import timber.log.Timber;
-/*retrofit logging
-https://stackoverflow.com/questions/32514410/logging-with-retrofit-2*/
+
 /**
- * Created by Sanket Gurav on 12/11/2017.
+ * This class initializes retrofit with a default configuration.
+ * You can use this class to initialize the different services.
  */
 
 public class RetrofitHelper {
@@ -23,9 +27,9 @@ public class RetrofitHelper {
     /**
      * The CityService communicates with the json api of the city provider.
      */
-    public WebServices getWebService() {
+    public CityService getCityService() {
         final Retrofit retrofit = createRetrofit();
-        return retrofit.create(WebServices.class);
+        return retrofit.create(CityService.class);
     }
 
     /**
@@ -34,18 +38,14 @@ public class RetrofitHelper {
     private OkHttpClient createOkHttpClient() {
         final OkHttpClient.Builder httpClient =
                 new OkHttpClient.Builder();
-        //  httpClient.addNetworkInterceptor()
-//        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-//        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        httpClient.addInterceptor(loggingInterceptor);
         httpClient.addInterceptor(new Interceptor() {
             @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
+            public Response intercept(Chain chain) throws IOException {
                 final Request original = chain.request();
                 final HttpUrl originalHttpUrl = original.url();
 
                 final HttpUrl url = originalHttpUrl.newBuilder()
-                        //    .addQueryParameter("username", "demo")
+                        .addQueryParameter("username", "demo")
                         .build();
 
                 // Request customization: add request headers
@@ -58,7 +58,6 @@ public class RetrofitHelper {
                     Timber.v("Request body : %s", request.body());
                     Timber.v("Request head : %s", request.headers());
                 }
-
                 return chain.proceed(request);
             }
         });
@@ -69,11 +68,9 @@ public class RetrofitHelper {
     /**
      * Creates a pre configured Retrofit instance
      */
-    private String baseUrl = "https://api.github.com";
-
     private Retrofit createRetrofit() {
-        return new Retrofit.Builder().
-                baseUrl(ApiConfig.BASE_URL + ApiConfig.API_VERSION)
+        return new Retrofit.Builder()
+                .baseUrl("http://api.geonames.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // <- add this
                 .client(createOkHttpClient())

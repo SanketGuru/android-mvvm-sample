@@ -1,13 +1,18 @@
 package sanketguru.com.sample.home;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import sanketguru.com.sample.OnFragmentInteractionListener;
 import sanketguru.com.sample.R;
 
@@ -30,7 +35,11 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private HomeViewModel homeViewModel;
     private OnFragmentInteractionListener mListener;
+    @BindView(R.id.swipRefreshLayout)
+    SwipeRefreshLayout swipRefreshLayout;
+    Unbinder unBinder;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -64,16 +73,32 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+//        homeViewModel.mSectionData.observe(this, dashBoard -> {
+//            if (dashBoard != null) {
+//                setUpUiTrays(dashBoard);
+//
+//
+//            }
+//            mainScrollRefresh.setRefreshing(false);
+//        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        unBinder = ButterKnife.bind(this, v);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-         //   mListener.onFragmentInteraction(uri);
+            //   mListener.onFragmentInteraction(uri);
         }
     }
 

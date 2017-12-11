@@ -25,15 +25,15 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener {
     private static final String TRANSLATION_X_KEY = "TRANSLATION_X_KEY";
     private static final String CARD_ELEVATION_KEY = "CARD_ELEVATION_KEY";
     private static final String SCALE_KEY = "SCALE_KEY";
     //@BindView(R.id.toolbar)
     ActionBar toolbar;
     @BindView(R.id.drawer_layout)
-    DrawerLayout drawer;  @BindView(R.id.text)
+    DrawerLayout drawer;
+    @BindView(R.id.text)
     TextView text;
     @BindView(R.id.mainView)
     android.support.v7.widget.CardView mainView;
@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity
     android.support.design.widget.NavigationView navView;
     private Unbinder unBinder;
     private MainViewModel mModel;
-int daddt=2;
+    int daddt = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ int daddt=2;
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                mModel.getUserDetail().setValue(new UserDetails(++daddt+"assj","ff",new Date()));
+                mModel.getUserDetail().setValue(new UserDetails(++daddt + "assj", "ff", new Date()));
             }
         });
 
@@ -72,19 +73,29 @@ int daddt=2;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    // enable or disable slide menu
+    public void setDrawerLayoutEnable(boolean what) {
+        if (what) {
+            // Drawer will be open through swipe by user
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } else {
+            // User will not be able to open Drawer but it can be open from application programmatically
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
     final Observer<UserDetails> nameObserver = new Observer<UserDetails>() {
         @Override
         public void onChanged(@Nullable final UserDetails newName) {
             // Update the UI, in this case, a TextView.
-            if(newName!=null)
-            text.setText(newName.getFName());
+            if (newName != null)
+                text.setText(newName.getFName());
         }
 
     };
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

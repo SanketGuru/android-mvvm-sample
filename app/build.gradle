@@ -17,7 +17,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "sanketguru.com.sample"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -45,7 +45,7 @@ project.ext {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     //region Suppotr Lib
     implementation "com.android.support:appcompat-v7:$project.supportLibVersion"
@@ -63,6 +63,7 @@ dependencies {
     //region ButterKnife
     implementation "com.facebook.fresco:fresco:$project.frescoVersion"
     implementation "com.jakewharton:butterknife:$project.butterKnifeVersion"
+    implementation 'com.android.support:support-v4:26.1.0'
     annotationProcessor "com.jakewharton:butterknife-compiler:$project.butterKnifeVersion"
     //endregion
 

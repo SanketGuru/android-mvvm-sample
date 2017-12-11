@@ -1,97 +1,55 @@
 package sanketguru.com.sample;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import java.util.Date;
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import sanketguru.com.sample.home.HomeFragment;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, OnFragmentInteractionListener {
     private static final String TRANSLATION_X_KEY = "TRANSLATION_X_KEY";
     private static final String CARD_ELEVATION_KEY = "CARD_ELEVATION_KEY";
     private static final String SCALE_KEY = "SCALE_KEY";
-    //@BindView(R.id.toolbar)
-    ActionBar toolbar;
+    //region View binding
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-    @BindView(R.id.text)
-    TextView text;
     @BindView(R.id.mainView)
-    android.support.v7.widget.CardView mainView;
+    CardView mainView;
     @BindView(R.id.nav_view)
-    android.support.design.widget.NavigationView navView;
+    NavigationView navView;
+    //endregion
+
     private Unbinder unBinder;
     private MainViewModel mModel;
-    int daddt = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unBinder = ButterKnife.bind(this);
-        //   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
-        toolbar = getSupportActionBar();
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         mModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mModel.getUserDetail().observe(this, nameObserver);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                mModel.getUserDetail().setValue(new UserDetails(++daddt + "assj", "ff", new Date()));
-            }
-        });
-
-        // DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //  drawer.addDrawerListener(toggle);
-        //toggle.syncState();
-        drawer.addDrawerListener(MainActivity.this);
-        drawer.setScrimColor(Color.TRANSPARENT);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setUpView();
     }
-    // enable or disable slide menu
-    public void setDrawerLayoutEnable(boolean what) {
-        if (what) {
-            // Drawer will be open through swipe by user
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        } else {
-            // User will not be able to open Drawer but it can be open from application programmatically
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
-    }
-    final Observer<UserDetails> nameObserver = new Observer<UserDetails>() {
-        @Override
-        public void onChanged(@Nullable final UserDetails newName) {
-            // Update the UI, in this case, a TextView.
-            if (newName != null)
-                text.setText(newName.getFName());
-        }
 
-    };
 
     @Override
     public void onBackPressed() {
@@ -188,4 +146,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return context.getResources().getDisplayMetrics().density;
         // return (this * density).toInt()
     }
+
+    private void setUpView() {//        mModel.getUserDetail().observe(this, nameObserver);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                mModel.getUserDetail().setValue(new UserDetails(++daddt + "assj", "ff", new Date()));
+//            }
+//        });
+
+        // DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        //  drawer.addDrawerListener(toggle);
+        //toggle.syncState();
+        drawer.addDrawerListener(MainActivity.this);
+        drawer.setScrimColor(Color.TRANSPARENT);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        Fragment homeFragment= HomeFragment.newInstance("Hi","Ho");
+        addFragmentToMain(homeFragment,false);
+    }
+
+    //region fragment inter action
+    @Override
+    public void onFragmentInteraction(@NotNull Object data) {
+
+    }
+
+    @Override
+    public void addFragmentToMain(@NotNull Fragment fragment, boolean addtobackstack) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.mainView, fragment);
+        if (addtobackstack) {
+            fragmentTransaction.addToBackStack("MainBack");
+        }
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
+    public void setTitleHead(@NotNull CharSequence title) {
+
+    }
+
+    @Override
+    public void hideToolbar(boolean hide) {
+
+    }
+
+    @Override
+    public void lockDrawer(boolean lock) {
+        if (lock) {
+            // Drawer will be open through swipe by user
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } else {
+            // User will not be able to open Drawer but it can be open from application programmatically
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+
+    }
+    //end region
 }

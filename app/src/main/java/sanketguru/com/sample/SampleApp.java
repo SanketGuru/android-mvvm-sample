@@ -1,6 +1,8 @@
 package sanketguru.com.sample;
 
-import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import timber.log.Timber;
 
@@ -8,7 +10,7 @@ import timber.log.Timber;
  * Created by Sanket Gurav on 12/11/2017.
  */
 
-public class SampleApp extends Application {
+public class SampleApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -22,5 +24,11 @@ public class SampleApp extends Application {
 //                .application(this)
 //                .build()
 //                .inject(this);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

@@ -2,18 +2,16 @@ package sanketguru.com.sample.apiservices;
 
 import java.io.IOException;
 
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sanketguru.com.sample.BuildConfig;
-import timber.log.Timber;
 /*retrofit logging
 https://stackoverflow.com/questions/32514410/logging-with-retrofit-2*/
+
 /**
  * Created by Sanket Gurav on 12/11/2017.
  */
@@ -34,35 +32,8 @@ public class RetrofitHelper {
     private OkHttpClient createOkHttpClient() {
         final OkHttpClient.Builder httpClient =
                 new OkHttpClient.Builder();
-        //  httpClient.addNetworkInterceptor()
-//        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-//        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        httpClient.addInterceptor(loggingInterceptor);
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
-                final Request original = chain.request();
-                final HttpUrl originalHttpUrl = original.url();
-
-                final HttpUrl url = originalHttpUrl.newBuilder()
-                        //    .addQueryParameter("username", "demo")
-                        .build();
-
-                // Request customization: add request headers
-                final Request.Builder requestBuilder = original.newBuilder()
-                        .url(url);
-
-                final Request request = requestBuilder.build();
-                if (BuildConfig.DEBUG ) {
-                    Timber.v("Request url  : [ %s ] -> [ %s ]",request.method(), request.url().toString());
-                    Timber.v("Request body : %s", request.body());
-                    Timber.v("Request head : %s", request.headers());
-                }
-
-                return chain.proceed(request);
-            }
-        });
-
+        httpClient.addInterceptor(new RequestInterceptor(BuildConfig.DEBUG, true));
+        httpClient.addNetworkInterceptor(new ResponseInterceptor(BuildConfig.DEBUG, true));
         return httpClient.build();
     }
 

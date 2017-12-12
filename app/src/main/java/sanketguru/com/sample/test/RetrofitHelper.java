@@ -15,6 +15,9 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import sanketguru.com.sample.BuildConfig;
+import sanketguru.com.sample.Search.SearchService;
+import sanketguru.com.sample.apiservices.RequestInterceptor;
+import sanketguru.com.sample.apiservices.ResponseInterceptor;
 import timber.log.Timber;
 
 /**
@@ -32,45 +35,31 @@ public class RetrofitHelper {
         return retrofit.create(CityService.class);
     }
 
+    public SearchService getSearchService() {
+        final Retrofit retrofit = createRetrofit();
+        return retrofit.create(SearchService.class);
+    }
+
     /**
      * This custom client will append the "username=demo" query after every request.
      */
     private OkHttpClient createOkHttpClient() {
         final OkHttpClient.Builder httpClient =
                 new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                final Request original = chain.request();
-                final HttpUrl originalHttpUrl = original.url();
-
-                final HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("username", "demo")
-                        .build();
-
-                // Request customization: add request headers
-                final Request.Builder requestBuilder = original.newBuilder()
-                        .url(url);
-
-                final Request request = requestBuilder.build();
-                if (BuildConfig.DEBUG ) {
-                    Timber.v("Request url  : [ %s ] -> [ %s ]",request.method(), request.url().toString());
-                    Timber.v("Request body : %s", request.body());
-                    Timber.v("Request head : %s", request.headers());
-                }
-                return chain.proceed(request);
-            }
-        });
+       // httpClient.addInterceptor(new RequestInterceptor(BuildConfig.DEBUG,true));
+      //  httpClient.addNetworkInterceptor(new ResponseInterceptor(BuildConfig.DEBUG,true));
 
         return httpClient.build();
     }
 
+    static  final String newbaseUrl="http://122.184.137.84:85/PartnerPortalMobileApp/api/";
     /**
      * Creates a pre configured Retrofit instance
      */
     private Retrofit createRetrofit() {
         return new Retrofit.Builder()
-                .baseUrl("http://api.geonames.org/")
+               // .baseUrl("http://api.geonames.org/")
+                .baseUrl(newbaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // <- add this
                 .client(createOkHttpClient())

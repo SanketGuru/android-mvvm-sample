@@ -39,7 +39,8 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private OnFragmentInteractionListener mListener;
     @BindView(R.id.swipRefreshLayout)
-    SwipeRefreshLayout swipRefreshLayout; @BindView(R.id.fab)
+    SwipeRefreshLayout swipRefreshLayout;
+    @BindView(R.id.fab)
     FloatingActionButton fab;
     Unbinder unBinder;
 

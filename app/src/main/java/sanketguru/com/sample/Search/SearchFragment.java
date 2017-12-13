@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,10 +37,15 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private OnFragmentInteractionListener mListener;
     @BindView(R.id.searchView)
     SearchView searchView;
-    @BindView(R.id.textViewResult)
-    TextView textViewResult;
+
 
     Unbinder unBinder;
+
+    private RecyclerViewAdapter recyclerViewAdapter;
+    @BindView(R.id.recyclerView)
+
+    RecyclerView recyclerView;
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -90,13 +98,17 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         unBinder = ButterKnife.bind(this, v);
 
         // searchView.setOnClickListener(view ->  searchViewModel.getSearchList( RxSearchObservable.fromView(searchView)));
+        ArrayList<SerachVacancy> serachVacancyArrayList = new ArrayList<>();
+        recyclerViewAdapter = new RecyclerViewAdapter(serachVacancyArrayList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(recyclerViewAdapter);
 
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         searchViewModel.mSectionData.observe(this, new Observer<List<SerachVacancy>>() {
             @Override
             public void onChanged(@Nullable List<SerachVacancy> serachVacancies) {
                 Timber.v("tag valu: %s", serachVacancies.get(0).getLookupValue().toString());
-                textViewResult.setText(serachVacancies.get(0).getLookupValue().toString());
+                recyclerViewAdapter.addItems(serachVacancies);
             }
         });
         return v;
@@ -157,6 +169,54 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
 
+    }
+
+
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
+
+        private List<SerachVacancy> borrowModelList;
+
+
+        public RecyclerViewAdapter(List<SerachVacancy> borrowModelList) {
+            this.borrowModelList = borrowModelList;
+
+        }
+
+        @Override
+        public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new RecyclerViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.recycler_item, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(final RecyclerViewHolder holder, int position) {
+            SerachVacancy borrowModel = borrowModelList.get(position);
+            holder.itemTextView.setText(String.valueOf(borrowModel.getVacancyID()));
+
+            holder.itemView.setTag(borrowModel);
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return borrowModelList.size();
+        }
+
+        public void addItems(List<SerachVacancy> borrowModelList) {
+            this.borrowModelList = borrowModelList;
+            notifyDataSetChanged();
+        }
+
+        public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+            private TextView itemTextView;
+
+
+            public RecyclerViewHolder(View view) {
+                super(view);
+                itemTextView = (TextView) view.findViewById(R.id.textViewResult);
+
+            }
+        }
     }
 }
 

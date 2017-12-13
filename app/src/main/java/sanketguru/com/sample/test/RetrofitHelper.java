@@ -46,7 +46,7 @@ public class RetrofitHelper {
     private OkHttpClient createOkHttpClient() {
         final OkHttpClient.Builder httpClient =
                 new OkHttpClient.Builder();
-       // httpClient.addInterceptor(new RequestInterceptor(BuildConfig.DEBUG,true));
+        httpClient.addInterceptor(new RequestInterceptor(BuildConfig.DEBUG,true));
       //  httpClient.addNetworkInterceptor(new ResponseInterceptor(BuildConfig.DEBUG,true));
 
         return httpClient.build();

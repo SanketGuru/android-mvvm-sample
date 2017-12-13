@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import sanketguru.com.sample.Search.SearchFragment;
 import sanketguru.com.sample.home.HomeFragment;
 
 
@@ -167,7 +168,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setScrimColor(Color.TRANSPARENT);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        Fragment homeFragment= HomeFragment.newInstance("Hi","Ho");
+      
+        Fragment homeFragment= SearchFragment.newInstance("Hi","Ho");
         addFragmentToMain(homeFragment,false);
     }
 

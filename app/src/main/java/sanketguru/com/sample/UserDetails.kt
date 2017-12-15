@@ -7,9 +7,9 @@ import java.util.Date
  */
 
 class UserDetails(fName: String, lName: String, dob: Date) {
-     var fName = ""
-     var lName = ""
-    var dob = Date()
+    private var fName = ""
+    private var lName = ""
+    private var dob = Date()
 
     init {
         this.fName = fName

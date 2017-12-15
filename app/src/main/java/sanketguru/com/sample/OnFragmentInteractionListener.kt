@@ -22,7 +22,7 @@ interface OnFragmentInteractionListener {
      * will add fragment to main pane
      * @param fragment to be added which as arrguments set
      */
-    fun addFragmentToMain(fragment: Fragment, addToBackstack : Boolean)
+    fun addFragmentToMain(fragment: Fragment, addToBackstack: Boolean)
 
     /**
      * Set title of page

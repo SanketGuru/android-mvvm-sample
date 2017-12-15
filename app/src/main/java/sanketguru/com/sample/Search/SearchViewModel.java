@@ -10,6 +10,7 @@ import java.util.function.Function;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import sanketguru.com.sample.test.RetrofitHelper;
 import timber.log.Timber;
@@ -38,7 +39,17 @@ public class SearchViewModel extends ViewModel {
                             throwable.printStackTrace();
                         });*/
 
-        publishSubject.debounce(200, TimeUnit.MILLISECONDS)
+        publishSubject.debounce(200, TimeUnit.MILLISECONDS).
+        filter(new Predicate<String>() {
+            @Override
+            public boolean test(String text) throws Exception {
+                if (text.isEmpty()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        })
                 .distinctUntilChanged()
                 .switchMap(new io.reactivex.functions.Function<String, ObservableSource<SearchVacancyResponce>>() {
                     @Override

@@ -25,7 +25,7 @@ public class SearchViewModel extends ViewModel {
     RetrofitHelper retrofitFactory = new RetrofitHelper();
     public MutableLiveData<List<SerachVacancy>> mSectionData = new MutableLiveData<>();
 
-    public void getSearchList(Observable<String > publishSubject) {
+    public void getSearchList(Observable<String> publishSubject) {
 
        /* Observable<SearchVacancyResponce> call = retrofitFactory.getSearchService().getSearchResponse("100");
         call.subscribeOn(Schedulers.io())
@@ -40,16 +40,16 @@ public class SearchViewModel extends ViewModel {
                         });*/
 
         publishSubject.debounce(200, TimeUnit.MILLISECONDS).
-        filter(new Predicate<String>() {
-            @Override
-            public boolean test(String text) throws Exception {
-                if (text.isEmpty()) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        })
+                filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String text) throws Exception {
+                        if (text.isEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                })
                 .distinctUntilChanged()
                 .switchMap(new io.reactivex.functions.Function<String, ObservableSource<SearchVacancyResponce>>() {
                     @Override
@@ -73,9 +73,10 @@ public class SearchViewModel extends ViewModel {
                             throwable.printStackTrace();
                         });
     }
-public  Observable<SearchVacancyResponce> Search(String query){
-        return  retrofitFactory.getSearchService().getSearchResponse(query);
-}
+
+    public Observable<SearchVacancyResponce> Search(String query) {
+        return retrofitFactory.getSearchService().getSearchResponse(query);
+    }
 
 
 }

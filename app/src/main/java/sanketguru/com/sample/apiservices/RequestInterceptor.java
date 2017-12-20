@@ -48,8 +48,6 @@ public class RequestInterceptor implements Interceptor {
         if (debug) {
             Timber.v("Request url  : [ %s ] -> [ %s ]", request.method(), request.url().toString());
             Timber.v("Request body : %s", request.body());
-
-
             Timber.v("Request head : %s", request.headers());
         }
         final Buffer buffer = new Buffer();
@@ -78,19 +76,22 @@ public class RequestInterceptor implements Interceptor {
                 Timber.v("Request head encrypt: %s", requestBuilder.headers(headBuilder.build()).build());
             }
             //endregion
+            buffer.close();
 
         }
         Response response = chain.proceed(requestEncrypt);
-        response.body();
+      //  ResponseBody respBody=  response.body();
 
+
+        ResponseBody respBody= ResponseBody.create(mtype, SecurityUtil.decrypt(new String(response.body().bytes())));
         if (encrypt) {
             //TODO decryp response data here
         }
 
-        ResponseBody body = ResponseBody.create(mtype, response.body().bytes());
-        response.newBuilder().body(body).build();
+//        ResponseBody body = ResponseBody.create(mtype, response.body().bytes());
+      //  response.newBuilder().body(respBody).build();
 
 
-        return response.newBuilder().body(body).build();
+        return response.newBuilder().body(respBody).build();
     }
 }

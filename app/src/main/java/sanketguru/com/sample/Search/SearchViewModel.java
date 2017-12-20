@@ -4,7 +4,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -29,8 +31,9 @@ public class SearchViewModel extends ViewModel {
     public MutableLiveData<List<SerachVacancy>> mSectionData = new MutableLiveData<>();
 
     public void getSearchList(Observable<String> publishSubject) {
-
-        Observable<SearchVacancyResponce> call = retrofitFactory.getSearchService().getSearchResponse("100");
+        Map<String,String> Datamap=new HashMap<>();
+        Datamap.put("Head","head data");
+      /*  Observable<SearchVacancyResponce> call = retrofitFactory.getSearchService().getSearchResponseBody("100",Datamap,Datamap);
         call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<SearchVacancyResponce>() {
@@ -38,7 +41,7 @@ public class SearchViewModel extends ViewModel {
                     public void accept(SearchVacancyResponce searchVacancyResponce) throws Exception {
 
                     }
-                });
+                });*/
 
         publishSubject.debounce(200, TimeUnit.MILLISECONDS).
                 filter(new Predicate<String>() {
@@ -73,7 +76,10 @@ public class SearchViewModel extends ViewModel {
     }
 
     public Observable<List<SerachVacancy>> Search(String query) {
-        return retrofitFactory.getSearchService().getSearchResponse(query)
+        HashMap<String,String> Datamap=new HashMap<>();
+        Datamap.put("Head","head data");
+
+        return retrofitFactory.getSearchService().getSearchResponseBody(query,Datamap)
                 .map(response -> response.getSerachVacancy())
                 .onErrorReturnItem(Collections.emptyList());
     }

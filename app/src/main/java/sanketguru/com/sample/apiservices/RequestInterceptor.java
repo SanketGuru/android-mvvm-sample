@@ -51,10 +51,12 @@ public class RequestInterceptor implements Interceptor {
         }
         Response response = chain.proceed(request);
         response.body();
-        MediaType mtype =new MediaType(
-                "json"
-        );
-        ResponseBody body = ResponseBody.create( mtype ,new byte[]);
+
+        if (encrypt) {
+            //TODO decryp request data here
+        }
+        MediaType mtype = response.body().contentType();
+        ResponseBody body = ResponseBody.create( mtype ,response.body().bytes());
         response.newBuilder().body(body).build();
 
 

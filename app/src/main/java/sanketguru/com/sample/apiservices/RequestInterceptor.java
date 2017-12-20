@@ -1,11 +1,15 @@
 package sanketguru.com.sample.apiservices;
 
+import android.provider.MediaStore;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import timber.log.Timber;
 
 /**
@@ -45,7 +49,15 @@ public class RequestInterceptor implements Interceptor {
         if (encrypt) {
             //TODO encrypt request data here
         }
+        Response response = chain.proceed(request);
+        response.body();
+        MediaType mtype =new MediaType(
+                "json"
+        );
+        ResponseBody body = ResponseBody.create( mtype ,new byte[]);
+        response.newBuilder().body(body).build();
 
-        return chain.proceed(request);
+
+        return response.newBuilder().body(body).build();
     }
 }

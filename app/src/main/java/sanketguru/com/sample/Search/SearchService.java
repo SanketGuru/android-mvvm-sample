@@ -21,8 +21,8 @@ public interface SearchService {
     Observable<SearchVacancyResponce> getSearchResponse(@Path("vacID") String query);
 
 
-    @GET("Vacancy/SerachVacancy/{VacID:{vacID}}")
-    Observable<SearchVacancyResponce> getSearchResponseBody(@Path("vacID") String query, @HeaderMap Map<String,String>  header);
+    @POST("Vacancy/SerachVacancy/{VacID:{vacID}}")
+    Observable<SearchVacancyResponce> getSearchResponseBody(@Path("vacID") String query, @HeaderMap Map<String,String>  header,@Body Map<String,String> body);
 
 
 }

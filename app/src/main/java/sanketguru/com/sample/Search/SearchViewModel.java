@@ -79,7 +79,7 @@ public class SearchViewModel extends ViewModel {
         HashMap<String,String> Datamap=new HashMap<>();
         Datamap.put("Head","head data");
 
-        return retrofitFactory.getSearchService().getSearchResponseBody(query,Datamap)
+        return retrofitFactory.getSearchService().getSearchResponseBody(query,Datamap,Datamap)
                 .map(response -> response.getSerachVacancy())
                 .onErrorReturnItem(Collections.emptyList());
     }

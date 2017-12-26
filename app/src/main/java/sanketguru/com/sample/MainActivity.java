@@ -2,6 +2,7 @@ package sanketguru.com.sample;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -19,14 +20,22 @@ import android.widget.LinearLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import sanketguru.com.sample.Search.SearchFragment;
+import sanketguru.com.sample.constant.MainConstants;
 import sanketguru.com.sample.home.HomeFragment;
+import sanketguru.com.sample.menu.MenuGetter;
+import sanketguru.com.sample.util.nav.FragmentStateModel;
+import sanketguru.com.sample.util.nav.FragmentTransitionHelperImpl;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, OnFragmentInteractionListener,
+        MainConstants {
+
     private static final String TRANSLATION_X_KEY = "TRANSLATION_X_KEY";
     private static final String CARD_ELEVATION_KEY = "CARD_ELEVATION_KEY";
     private static final String SCALE_KEY = "SCALE_KEY";
@@ -41,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Unbinder unBinder;
     private MainViewModel mModel;
+    private final HashMap<String, String> globalTitles = new HashMap<>();
+    final FragmentTransitionHelperImpl fragTransitionHelper = new FragmentTransitionHelperImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            loadFragment(NAVIGATE_TO_SEARCH);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -112,9 +123,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
-
-        unBinder.unbind();
         super.onDestroy();
+        unBinder.unbind();
+        globalTitles.clear();
+        fragTransitionHelper.setActivity(null);
     }
 
     //region  DrawerLayout.DrawerListener
@@ -149,7 +161,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // return (this * density).toInt()
     }
 
-    private void setUpView() {//        mModel.getUserDetail().observe(this, nameObserver);
+    private void setUpView() {
+//        mModel.getUserDetail().observe(this, nameObserver);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -158,19 +171,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                mModel.getUserDetail().setValue(new UserDetails(++daddt + "assj", "ff", new Date()));
 //            }
 //        });
-
-        // DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//
+//         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //  drawer.addDrawerListener(toggle);
-        //toggle.syncState();
+//          drawer.addDrawerListener(toggle);
+//        toggle.syncState();
         drawer.addDrawerListener(MainActivity.this);
         drawer.setScrimColor(Color.TRANSPARENT);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-      
-        Fragment homeFragment= SearchFragment.newInstance("Hi","Ho");
-        addFragmentToMain(homeFragment,false);
+        fragTransitionHelper.setActivity(this);
+        setupDefaultFragment();
+//        Fragment homeFragment = SearchFragment.newInstance("Hi", "Ho");
+//        addFragmentToMain(homeFragment, false);
     }
 
     //region fragment inter action
@@ -212,5 +226,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
-    //end region
+
+    public void hideAppTitle() {
+//        setTitle blank
+    }
+
+    public void setLastTitle(String currentPage) {
+        setAppTitle(currentPage, globalTitles.get(currentPage));
+    }
+
+    public void setAppTitle(String currentPage, String title) {
+        globalTitles.put(currentPage, title);
+        //set Text
+
+    }
+
+    private void setupDefaultFragment() {
+        loadFirstFragment(NAVIGATE_TO_GALLERY);
+    }
+
+    /**
+     * Separate logic for First Time load, because onResume is not called yet.
+     */
+    private void loadFirstFragment(int pageId) {
+        fragTransitionHelper.getNavHelper().setupFragment(MenuGetter.getFragment(pageId), false);
+    }
+
+    void loadFragment(int pageId) {
+        fragTransitionHelper.navigateTo(new FragmentStateModel(pageId, new Bundle(), false));
+    }
+
+    private boolean cacheNavigation(FragmentStateModel stateModel) {
+        if (fragTransitionHelper.isPaused()) {
+            fragTransitionHelper.navigateTo(stateModel);
+            return true;
+        }
+        return false;
+    }
+
+    public void gotoPage(MainFragment currentFrag, FragmentStateModel stateModel) {
+        if (!cacheNavigation(stateModel)) {
+            fragTransitionHelper.getNavHelper().addFragment(currentFrag, stateModel);
+        }
+    }
 }

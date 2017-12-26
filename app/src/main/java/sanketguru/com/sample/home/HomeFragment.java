@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import sanketguru.com.sample.MainFragment;
 import sanketguru.com.sample.OnFragmentInteractionListener;
 import sanketguru.com.sample.R;
 
@@ -26,7 +27,7 @@ import sanketguru.com.sample.R;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends MainFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

@@ -22,6 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import sanketguru.com.sample.MainFragment;
 import sanketguru.com.sample.OnFragmentInteractionListener;
 import sanketguru.com.sample.R;
 import timber.log.Timber;
@@ -30,7 +31,7 @@ import timber.log.Timber;
  * Created by Bhavesh on 12-12-2017.
  */
 
-public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class SearchFragment extends MainFragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
     private SearchViewModel searchViewModel;
